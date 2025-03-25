@@ -59,6 +59,16 @@ dist: clean
 	tar -caf dwl-$(VERSION).tar.gz dwl-$(VERSION)
 	rm -rf dwl-$(VERSION)
 
+dist.built: dwl
+	mkdir -p dwl-$(VERSION)
+	cp dwl dwl.1 dwl-$(VERSION)
+	printf '#!/bin/sh\nset -e\n' >dwl-$(VERSION)/install
+	echo 'install -Dm755 dwl ${PREFIX}/bin/dwl' >>dwl-$(VERSION)/install
+	echo 'install -Dm644 dwl.1 ${MANDIR}/man1/dwl.1' >>dwl-$(VERSION)/install
+	chmod +x dwl-$(VERSION)/install
+	tar czf dwl.tar.gz dwl-$(VERSION)
+	rm -rf dwl-${VERSION}
+
 install: dwl
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	rm -f $(DESTDIR)$(PREFIX)/bin/dwl
