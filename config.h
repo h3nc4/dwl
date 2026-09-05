@@ -13,6 +13,12 @@ static const char *fonts[]                 = {"Terminess Nerd Font:size=11"};
 static const float rootcolor[]             = COLOR(0x000000ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
+// static uint32_t colors[][3]                = {
+// 	/*               fg          bg          border    */
+// 	[SchemeNorm] = { 0xD3D3D3ff, 0x2F4F4Fff, 0x8B0000ff },
+// 	[SchemeSel]  = { 0xFFFFFFff, 0xA40000ff, 0xA40000ff },
+// 	[SchemeUrg]  = { 0,          0,          0x770000ff },
+// };
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
 	[SchemeNorm] = { 0xD3D3D3CC, 0x2F4F4FCC, 0x8B0000CC },
