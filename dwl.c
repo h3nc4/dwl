@@ -365,6 +365,8 @@ static void setmon(Client *c, Monitor *m, uint32_t newtags);
 static void setpsel(struct wl_listener *listener, void *data);
 static void setsel(struct wl_listener *listener, void *data);
 static void setup(void);
+static void shiftview(const Arg *arg);
+static void shifttag(const Arg *arg);
 static void spawn(const Arg *arg);
 static void startdrag(struct wl_listener *listener, void *data);
 static int statusin(int fd, unsigned int mask, void *data);
@@ -2931,6 +2933,41 @@ setup(void)
 		fprintf(stderr, "failed to setup XWayland X server, continuing without it\n");
 	}
 #endif
+}
+
+void
+shiftview(const Arg *arg)
+{
+	Arg a;
+	int nextseltags, curseltags = selmon->tagset[selmon->seltags];
+	if (arg->i > 0) // left circular shift
+		nextseltags = (curseltags << arg->i) | (curseltags >> (TAGCOUNT - arg->i));
+	else // right circular shift 
+		nextseltags = curseltags >> (-arg->i) | (curseltags << (TAGCOUNT + arg->i));
+
+	a.i = nextseltags; // Change view to the new tag
+	view(&a);
+}
+
+void
+shifttag(const Arg *arg)
+{
+	Arg a;
+	int nextseltags, curseltags = selmon->tagset[selmon->seltags];
+	Client *sel = focustop(selmon);
+	if (!sel)
+		return;
+	if (arg->i > 0) // left circular shift 
+		nextseltags = (curseltags << arg->i) | (curseltags >> (TAGCOUNT - arg->i));
+	else // right circular shift 
+		nextseltags = curseltags >> (-arg->i) | (curseltags << (TAGCOUNT + arg->i));
+
+	sel->tags = nextseltags & TAGMASK;// Apply new tag to the client
+	a.i = nextseltags; // Change view to the new tag
+	view(&a);
+
+	arrange(selmon);
+	drawbars(); // change to 'printstatus();' if not using "bars" patch
 }
 
 void
